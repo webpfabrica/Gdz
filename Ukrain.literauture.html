@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вступ до історії України</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Введіть сторінку і номер завдання:</h1>
+
+    <label>Сторінка:</label>
+    <input type="text" id="pageInput"><br><br>
+
+    <label>Номер завдання:</label>
+    <input type="text" id="taskInput"><br><br>
+
+    <button onclick="findAnswer()">Знайти</button>
+
+    <p id="answer"></p>
+
+    <script>
+        async function findAnswer() {
+            const page = document.getElementById('pageInput').value.trim();
+            const task = document.getElementById('taskInput').value.trim();
+            const answerElement = document.getElementById('answer');
+
+            if (!page || !task) {
+                answerElement.textContent = "Введіть номер сторінки і завдання.";
+                return;
+            }
+
+            try {
+                const response = await fetch('english.json'); // Загружаем JSON
+                const data = await response.json();
+                
+                if (data[page] && data[page][task]) {
+                    // Заменяем \n на <br> для переноса строк
+                    answerElement.innerHTML = `${data[page][task].replace(/\n/g, '<br>')}`;
+                } else {
+                    answerElement.textContent = "Сторінка або завдання не знайдені.";
+                }
+            } catch (error) {
+                answerElement.textContent = "Помилка завантаження даних.";
+            }
+        }
+    </script>    
+
+    <p><a href="index.html" class="button">Головна сторінка</a></p>
+</body>
+</html>
